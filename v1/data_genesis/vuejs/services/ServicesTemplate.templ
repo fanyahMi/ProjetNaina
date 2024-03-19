@@ -1,0 +1,52 @@
+const host = "[HostService]/";
+export default {
+    
+    async get() {
+      try {
+        const response = await fetch(`${host}[classNameMin]`);
+        const data = await response.json();
+        return data.data;
+      } catch (error) {
+        console.error('Erreur:', error);
+      }
+    },
+
+    async save(data) {
+      try {
+        const response = await fetch(`${host}[classNameMin]`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+      } catch (error) {
+        console.log("Erreur d insertion : " , error);
+      }
+    },
+
+    async delete(id) {
+        const response = await fetch(`${host}[classNameMin]/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+           },
+        });
+        const data = await response.json();
+        return data;
+    },
+
+    async update(id, news) {
+        const response = await fetch(`${host}[classNameMin]?id=${id}`, {
+            method: 'PUT',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(news),
+        });
+        const data = await response.json();
+        return data;
+    },
+};
+  

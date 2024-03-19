@@ -1,0 +1,18 @@
+import DashboardLayout from "@/pages/Layout/DashboardLayout.vue";
+import Icons from "@/pages/Icons.vue";
+[imports]
+
+
+const routes = [
+  {
+    path: "/",
+    component: DashboardLayout,
+    redirect: "/[classNameMin]",
+    children: [
+      [children]
+    ],
+  },
+];
+
+export default routes;
+
