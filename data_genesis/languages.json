@@ -162,11 +162,37 @@
             "viewImportService":"import [classNameMaj]Service from '../../service/[classNameMaj]Service';",
             "viewTableLine":"<md-table-cell md-label=\"[Lable]\">{{ item.[fieldNameMin] }}</md-table-cell>",
             "tableName":"Table[classNameMaj]",
+            "saveName":"Save[classNameMaj]",
             "viewExportComponentName": "index",
             "viewExportComponentExtension": "js",
             "viewExportComponentContent":"vuejs/vue/ExportComponent",
             "viewExportComponentSavePath": "[projectNameMaj]/src/components",
             "viewExportComponentImport": "import [importComponent] from '@/components/Info/[importComponent]'",
+            "viewListOption":"<md-option v-for=\"dt in [classNameMin]Foreignkey\" :key=\"dt.[primaryKey]\" :value=\"dt.[primaryKey]\">{{ dt.[fieldMin] }}</md-option>",
+            "viewAppleForeignKey" : "this.[classNameMin]Foreignkey = await [classNameMaj]Service.get();",
+            "viewSaveComponent" : "vuejs/vue/Savetemplate",
+            "viewCallForeignkeyComponent":"vuejs/vue/CallForeignKey",
+            "templateInsert":{
+                "inputComponent": "vuejs/vue/component/InsertInput",
+                "textareaComponent": "vuejs/vue/component/InsertTextarea",
+                "listComponent": "vuejs/vue/component/InsertList",
+                "types":{
+                    "Integer": "number",
+                    "String": "text",
+                    "java.sql.Date":"date",
+                    "Double": "number",
+                    "java.time.LocalDateTime": "date",
+                    "text": "text"
+                },
+                "typesComponent":{
+                    "Integer": "vuejs/vue/component/InsertNumber",
+                    "String": "vuejs/vue/component/InsertInput",
+                    "java.sql.Date":"vuejs/vue/component/InsertInput",
+                    "Double": "vuejs/vue/component/InsertNumber",
+                    "java.time.LocalDateTime": "vuejs/vue/component/InsertInput",
+                    "text": "vuejs/vue/component/InsertTextarea"
+                }
+            },
             "service":{
                 "serviceName":"[classNameMaj]Service",
                 "serviceExtension": "js",

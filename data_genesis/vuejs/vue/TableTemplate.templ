@@ -73,7 +73,7 @@ export default {
 
     async submitDelete(id) {
         try {
-          await[classNameMaj]Service.delete(id);
+          await [classNameMaj]Service.delete(id);
           this.data = this.data.filter((dt) => dt.[PrimaryKey] !== id);
         } catch (error) {
           console.error("Erreur lors de la suppression de [classNameMaj]", error);
