@@ -11,54 +11,16 @@ public class View {
     private String viewImportService;
     private String viewTableLine;
     private String tableName;
-    private String saveName;
     private String viewExportComponentName;
     private String viewExportComponentExtension;
     private String viewExportComponentContent;
     private String viewExportComponentSavePath;
     private String viewExportComponentImport;
-    private String viewListOption;
-    private String viewAppleForeignKey;
-    private String viewSaveComponent;
-    private String viewCallForeignkeyComponent;
 
     /***** Service () ***/
-    private Insert templateInsert;
     private Service service;
     private Route routes;
     private Sidebar sidebar;
-
-    public String getViewListOption() {
-        return viewListOption;
-    }
-
-    public void setViewListOption(String viewListOption) {
-        this.viewListOption = viewListOption;
-    }
-
-    public String getViewAppleForeignKey() {
-        return viewAppleForeignKey;
-    }
-
-    public void setViewAppleForeignKey(String viewAppleForeignKey) {
-        this.viewAppleForeignKey = viewAppleForeignKey;
-    }
-
-    public Insert getTemplateInsert() {
-        return templateInsert;
-    }
-
-    public String getSaveName() {
-        return saveName;
-    }
-
-    public void setSaveName(String saveName) {
-        this.saveName = saveName;
-    }
-
-    public void setTemplateInsert(Insert templateInsert) {
-        this.templateInsert = templateInsert;
-    }
 
     public Service getService() {
         return service;
@@ -156,14 +118,6 @@ public class View {
         this.viewTableLine = viewTableLine;
     }
 
-    public String getViewSaveComponent() {
-        return viewSaveComponent;
-    }
-
-    public void setViewSaveComponent(String viewSaveComponent) {
-        this.viewSaveComponent = viewSaveComponent;
-    }
-
     public String getViewExportComponentName() {
         return viewExportComponentName;
     }
@@ -202,14 +156,6 @@ public class View {
 
     public void setViewExportComponentImport(String viewExportComponentImport) {
         this.viewExportComponentImport = viewExportComponentImport;
-    }
-
-    public String getViewCallForeignkeyComponent() {
-        return viewCallForeignkeyComponent;
-    }
-
-    public void setViewCallForeignkeyComponent(String viewCallForeignkeyComponent) {
-        this.viewCallForeignkeyComponent = viewCallForeignkeyComponent;
     }
 
 }

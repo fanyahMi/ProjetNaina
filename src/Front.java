@@ -152,26 +152,13 @@ public class Front {
                                         /**** Creation de exportation des component ****/
                                         importComponent = language.genereteImportExport(entities[i], importComponent,
                                                         "Table");
-                                        importComponent = language.genereteImportExport(entities[i], importComponent,
-                                                        "Save");
+                                        // importComponent = language.genereteImportExport(entities[i], importComponent,
+                                        // "Save");
                                         exportComponent = language.genereteExportComponent(entities[i], exportComponent,
                                                         "Table");
-                                        exportComponent = language.genereteExportComponent(entities[i],
-                                                        exportComponent,
-                                                        "Save");
-
-                                        /**** Save Component ***/
-                                        views[i] = language.genereteSaveComponent(entities[i], entities);
-                                        viewFile = language.getView().getViewComponentSavePath().replace(
-                                                        "[projectNameMaj]",
-                                                        HandyManUtils.majStart(projectName));
-                                        viewFile += "/" + language.getView().getSaveName() + "."
-                                                        + language.getView().getViewExtension();
-                                        viewFile = viewFile.replace("[classNameMaj]",
-                                                        HandyManUtils.majStart(entities[i].getClassName()));
-                                        Utility.createFile(viewFile);
-                                        Utility.writeFile(viewFile, views[i]);
-                                        viewFile = "";
+                                        // exportComponent = language.genereteExportComponent(entities[i],
+                                        // exportComponent,
+                                        // "Save");
 
                                 }
 

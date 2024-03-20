@@ -28,8 +28,8 @@ public class App {
                 File project, credentialFile;
                 String customFilePath, customFileContentOuter;
                 Entity[] entities;
-                String[] models, controllers;
-                String modelFile, controllerFile, customFile;
+                String[] models, controllers, views;
+                String modelFile, controllerFile, viewFile, customFile;
                 String customFileContent;
                 String foreignContext;
                 String customChanges, changesFile;
@@ -125,6 +125,7 @@ public class App {
                                 }
                                 models = new String[entities.length];
                                 controllers = new String[entities.length];
+                                views = new String[entities.length];
                                 navLink = "";
                                 for (int i = 0; i < models.length; i++) {
                                         models[i] = language.generateModel(entities[i], projectName);
