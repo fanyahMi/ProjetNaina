@@ -1,0 +1,21 @@
+ <div ref="modale" class="modale">
+            <div class="modale-content">
+            <form @submit.prevent="submitUpdate">
+                <md-card>
+                <md-card-header :data-background-color="dataBackgroundColor">
+                    <h4 class="title">Modifier [classNameMaj] </h4>
+                    <p class="category">Complete your profile</p>
+                </md-card-header>
+            
+                <md-card-content>
+                    <div class="md-layout">
+                        [ListInput]
+                        <div class="md-layout-item md-size-100 text-right">
+                            <md-button type="submit" class="md-raised md-success close">Valider</md-button>
+                        </div>
+                    </div>
+                </md-card-content>
+                </md-card>
+            </form>
+            </div>
+        </div>

@@ -1,0 +1,15 @@
+<script>
+import [classNameMaj]Service from "@/service/[classNameMaj]Service.js"; 
+
+export default {
+  created() {this.logout();
+  },
+  methods: {
+    logout() {
+        [classNameMaj]Service.logout(); 
+        this.$router.push({ name: '\'' });
+        window.location.reload();
+    },
+  },
+};
+</script>

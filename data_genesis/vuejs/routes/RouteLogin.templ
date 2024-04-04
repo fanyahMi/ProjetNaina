@@ -1,0 +1,16 @@
+// Route de connexion
+      {
+        path: "login",
+        name: "Login",
+        component: [classNameMaj],
+        meta: { requiresAuth: false }, 
+        hidden: isAuthenticated() 
+      },
+      // Route de déconnexion
+      {
+        path: "logout",
+        name: "Logout",
+        component: Logout,
+        meta: { requiresAuth: true }, 
+        hidden: !isAuthenticated() 
+      },
