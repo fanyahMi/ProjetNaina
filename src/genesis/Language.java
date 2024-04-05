@@ -2,6 +2,8 @@ package genesis;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
+
 import handyman.HandyManUtils;
 
 public class Language {
@@ -375,6 +377,34 @@ public class Language {
         return content;
     }
 
+    public String genereteModalModif(Entity entity, Entity[] entites) throws Exception {
+        String content = HandyManUtils.getFileContent(
+                Constantes.DATA_PATH + "/" + getView().getViewModalModifContent() + "."
+                        + Constantes.SERVICE_EXTENSION);
+        content = content.replace("[ListInput]", genereteInputSAveComponent(entity, entites));
+        return content;
+    }
+
+    private String genereteValueUpdate(Entity entity, Entity[] entites) throws Exception {
+        String content = "";
+        Entity foreign = null;
+        String contentTemplate = "";
+        int count = 0;
+        for (EntityField field : entity.getFields()) {
+            if (field.isForeign()) {
+                foreign = Utility.searchEntity(entites, field.getType());
+                content += "this." + HandyManUtils.minStart(field.getName()) + " = values."
+                        + HandyManUtils.minStart(field.getName()) + "."
+                        + HandyManUtils.minStart(foreign.getPrimaryField().getName());
+            } else {
+                content += "this." + HandyManUtils.minStart(field.getName()) + " = values."
+                        + HandyManUtils.minStart(field.getName());
+            }
+            content += ";\n";
+        }
+        return content;
+    }
+
     public String generateTableView(Entity entity, Entity[] entites) throws Exception {
         String content = HandyManUtils.getFileContent(
                 Constantes.DATA_PATH + "/" + getView().getViewTableContent() + "."
@@ -401,11 +431,34 @@ public class Language {
                 compte++;
             }
         }
+
         content = content.replace("[Line]", line);
+        content = content.replace("[modalModif]", genereteModalModif(entity, entites));
         content = content.replace("[imports]", imports);
         content = content.replace("[classNameMaj]", HandyManUtils.majStart(entity.getClassName()));
         content = content.replace("[classNameMin]", HandyManUtils.minStart(entity.getClassName()));
         content = content.replace("[PrimaryKey]", HandyManUtils.minStart(entity.getPrimaryField().getName()));
+        content = content.replace("[listAttribut]", genereteFieldSaveComponent(entity, entites));
+        Entity foreign = null;
+        int count = 0;
+        String contentTemplate = "";
+        for (EntityField field : entity.getFields()) {
+            if (field.isForeign()) {
+                foreign = Utility.searchEntity(entites, field.getType());
+                contentTemplate += getView().getViewAppleForeignKey() + "\n";
+                contentTemplate = contentTemplate.replace("[classNameMaj]",
+                        HandyManUtils.majStart(foreign.getClassName()));
+                contentTemplate = contentTemplate.replace("[classNameMin]",
+                        HandyManUtils.minStart(foreign.getClassName()));
+                count++;
+            }
+        }
+        if (count == 0)
+            content.replace("[ListCallForeignkey]", "");
+        content = content.replace("[ListCallForeignkey]", contentTemplate);
+        content = content.replace("[Listvalues]", genereteValueUpdate(entity, entites));
+        content = content.replace("[Listvalue]", genereteListValueInsert(entity, entites));
+
         return content;
     }
 
@@ -485,6 +538,135 @@ public class Language {
                 Constantes.DATA_PATH + "/" + getView().getSidebar().getSidebarContent() + "."
                         + Constantes.SERVICE_EXTENSION))
                 .replace("[children]", content);
+        return content;
+    }
+
+    private String genereteInputSAveComponent(Entity entity, Entity[] entities) throws Exception {
+        String content = "";
+        String template = "";
+        String type = "";
+        Entity foreign = null;
+        String option = "";
+        for (EntityField field : entity.getFields()) {
+            if (field.isForeign() && !field.isPrimary()) {
+                foreign = Utility.searchEntity(entities, field.getType());
+                template = HandyManUtils.getFileContent(
+                        Constantes.DATA_PATH + "/" + getView().getTemplateInsert().getListComponent() + "."
+                                + Constantes.SERVICE_EXTENSION);
+                option += getView().getViewListOption();
+                option = option.replace("[primaryKey]", HandyManUtils.minStart(foreign.getPrimaryField().getName()));
+                option = option.replace("[fieldMin]", HandyManUtils.minStart(Utility.getStringFirst(foreign)));
+                template = template.replace("[ListOption]", option);
+                content += template;
+                content = content.replace("[Label]", HandyManUtils.majStart(field.getName()));
+                content = content.replace("[fieldMin]", HandyManUtils.minStart(field.getName()));
+                content = content.replace("[classNameMin]", HandyManUtils.minStart(foreign.getClassName()));
+            } else if (!field.isPrimary()) {
+                type = getView().getTemplateInsert().getTypes().get(field.getType());
+                template = getView().getTemplateInsert().getTypesComponent().get(field.getType());
+                if (template == null) {
+                    type = "text";
+                    template = getView().getTemplateInsert().getTypesComponent().get("String");
+                }
+                template = HandyManUtils.getFileContent(
+                        Constantes.DATA_PATH + "/" + template + "."
+                                + Constantes.SERVICE_EXTENSION);
+                content += template;
+                content = content.replace("[Label]", HandyManUtils.majStart(field.getName()));
+                content = content.replace("[fieldMin]", HandyManUtils.minStart(field.getName()));
+                content = content.replace("[type]", type);
+            }
+        }
+        return content;
+
+    }
+
+    private String genereteCallForeignkey(Entity entity, Entity[] entities) throws Exception {
+        String contentTemplate = HandyManUtils.getFileContent(
+                Constantes.DATA_PATH + "/" + getView().getViewCallForeignkeyComponent() + "."
+                        + Constantes.SERVICE_EXTENSION);
+        String content = "";
+        Entity foreign = null;
+        int compte = 0;
+        for (EntityField field : entity.getFields()) {
+            if (field.isForeign()) {
+                foreign = Utility.searchEntity(entities, field.getType());
+                content += getView().getViewAppleForeignKey() + "\n";
+                content = content.replace("[classNameMaj]", HandyManUtils.majStart(foreign.getClassName()));
+                content = content.replace("[classNameMin]", HandyManUtils.minStart(foreign.getClassName()));
+                compte++;
+            }
+        }
+        if (compte == 0)
+            return "";
+        content = contentTemplate.replace("[ListCallForeignkey]", content);
+        return content;
+    }
+
+    private String genereteSaveImport(Entity entity, Entity[] entities) throws Exception {
+        String content = getView().getViewImportService() + "\n";
+        content = content.replace("[classNameMaj]", HandyManUtils.majStart(entity.getClassName()));
+        Entity foreign = null;
+        for (EntityField field : entity.getFields()) {
+            if (field.isForeign()) {
+                content += getView().getViewImportService();
+                foreign = Utility.searchEntity(entities, field.getType());
+                content = content.replace("[classNameMaj]", HandyManUtils.majStart(foreign.getClassName()));
+            }
+        }
+        return content;
+    }
+
+    private String genereteFieldSaveComponent(Entity entity, Entity[] entities) throws Exception {
+        String content = "";
+        Entity foreign = null;
+        for (EntityField field : entity.getFields()) {
+            if (field.isForeign()) {
+                foreign = Utility.searchEntity(entities, field.getType());
+                content += HandyManUtils.minStart(foreign.getClassName()) + "Foreignkey: [],\n";
+            }
+            content += HandyManUtils.minStart(field.getName()) + ": null ,\n";
+        }
+        return content;
+    }
+
+    private String genereteListValueInsert(Entity entity, Entity[] entities) throws Exception {
+        String content = "";
+        Entity foreign = null;
+        int count = 0;
+        for (EntityField field : entity.getFields()) {
+            if (field.isForeign() && !field.isPrimary()) {
+                foreign = Utility.searchEntity(entities, field.getType());
+                content += HandyManUtils.minStart(field.getName()) + ": { \n"
+                        + "\t" + HandyManUtils.minStart(foreign.getPrimaryField().getName()) + " : this."
+                        + HandyManUtils.minStart(field.getName()) + " \n }";
+            } else if (!field.isPrimary()) {
+                content += HandyManUtils.minStart(field.getName()) + " : this."
+                        + HandyManUtils.minStart(field.getName());
+            }
+            if (count == entity.getFields().length - 1) {
+                content += "\n";
+            } else if (count != 0) {
+                content += ",\n";
+            }
+            count++;
+        }
+        return content;
+    }
+
+    public String genereteSaveComponent(Entity entity, Entity[] entities) throws Exception {
+        String content = HandyManUtils.getFileContent(
+                Constantes.DATA_PATH + "/" + getView().getViewSaveComponent() + "."
+                        + Constantes.SERVICE_EXTENSION);
+        content = content.replace("[ListInput]", genereteInputSAveComponent(entity, entities));
+        content = content.replace("[foreignkey]", genereteCallForeignkey(entity, entities));
+        content = content.replace("[imports]", genereteSaveImport(entity, entities));
+        content = content.replace("[listAttribut]", genereteFieldSaveComponent(entity, entities));
+        content = content.replace("[Listvalue]", genereteListValueInsert(entity, entities));
+
+        content = content.replace("[classNameMin]", HandyManUtils.minStart(entity.getClassName()));
+        content = content.replace("[classNameMaj]", HandyManUtils.majStart(entity.getClassName()));
+
         return content;
     }
 
