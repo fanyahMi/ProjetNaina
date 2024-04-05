@@ -13,6 +13,4 @@ public class Constantes {
     public static final String VUEJS_EXTENSION = "zip";
     public static final String VUEJS_SKELETON = "vueJS";
     public static final String SERVICE_EXTENSION = "templ";
-    /**** Login  ****/
-    public static final String LOGIN_TABLE_JSON = "data_genesis/loginbase.json";
 }

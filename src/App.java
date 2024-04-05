@@ -10,7 +10,6 @@ import genesis.Database;
 import genesis.Entity;
 import genesis.EntityField;
 import genesis.Language;
-import genesis.Login;
 import handyman.HandyManUtils;
 
 public class App {
@@ -19,10 +18,6 @@ public class App {
                                 HandyManUtils.getFileContent(Constantes.DATABASE_JSON));
                 Language[] languages = HandyManUtils.fromJson(Language[].class,
                                 HandyManUtils.getFileContent(Constantes.LANGUAGE_JSON));
-                                
-                Login login = HandyManUtils.fromJson(Login.class,
-                                HandyManUtils.getFileContent(Constantes.LOGIN_TABLE_JSON));
-                
                 Database database;
                 Language language;
                 String databaseName, user, pwd, host;
@@ -39,52 +34,49 @@ public class App {
                 String foreignContext;
                 String customChanges, changesFile;
                 String navLink, navLinkPath;
-                /**** Login   ****/
-                boolean checkLogin = false;
                 try (Scanner scanner = new Scanner(System.in)) {
-                        System.out.println("Choix de la base de donnée:");
-                        for(int i=0;i<databases.length;i++){
-                                System.out.println((i+1)+") "+databases[i].getNom());
-                        } 
-                        //System.out.print("> ");
-                        //database=databases[scanner.nextInt()-1];
+                        System.out.println("Choose a database engine:");
+                        /*
+                         * for(int i=0;i<databases.length;i++){
+                         * System.out.println((i+1)+") "+databases[i].getNom());
+                         * }
+                         */
+                        // System.out.print("> ");
+                        // database=databases[scanner.nextInt()-1];
                         database = databases[0];
-                        System.out.println("Choix framework");
-                        for(int i=0;i<languages.length;i++){
-                                System.out.println((i+1)+") "+languages[i].getNom());
-                        }
-                        System.out.print("> ");
-                        //language=languages[scanner.nextInt()-1];
-                        
+                        /*
+                         * System.out.println("Choose a framework:");
+                         * for(int i=0;i<languages.length;i++){
+                         * System.out.println((i+1)+") "+languages[i].getNom());
+                         * }
+                         * System.out.print("> ");
+                         * language=languages[scanner.nextInt()-1];
+                         */
                         language = languages[0];
-                        System.out.println("Detail de la base de donnée :");
+                        System.out.println("Enter your database credentials:");
                         System.out.print("Database name: ");
-                        //databaseName=scanner.next();
-                        databaseName = "daotest";
+                        // databaseName=scanner.next();
+                        databaseName = "meuble";
                         System.out.print("Username: ");
-                        //user = scanner.next();
+                        // user = scanner.next();
                         user = "postgres";
                         System.out.print("Password: ");
-                        //pwd = scanner.next();
+                        // pwd = scanner.next();
                         pwd = "Hasinjo2";
                         System.out.print("Database host: ");
-                        //host = scanner.next();
+                        // host = scanner.next();
                         host = "localhost";
-                        //System.out.print("Use SSL ?(Y/n): ");
+                        System.out.print("Use SSL ?(Y/n): ");
                         // useSSL = scanner.next().equalsIgnoreCase("Y");
                         useSSL = true;
-                        //System.out.print("Allow public key retrieval ?(Y/n): ");
+                        System.out.print("Allow public key retrieval ?(Y/n): ");
                         // allowPublicKeyRetrieval = scanner.next().equalsIgnoreCase("Y");
                         allowPublicKeyRetrieval = false;
                         System.out.println();
                         System.out.print("Enter your project name: ");
-                        //projectName = scanner.next();
+                        // projectName = scanner.next();
                         projectName = "daotest";
-                        System.out.print("Ajouter de login  (Y/n): ");
-                        checkLogin = scanner.next().equalsIgnoreCase("Y");
-                        System.out.println(checkLogin);
-                        
-                        //System.out.print("Which entities to import ?(* to select all): ");
+                        System.out.print("Which entities to import ?(* to select all): ");
                         // entityName = scanner.next();
                         entityName = "*";
                         credentials = new Credentials(databaseName, user, pwd, host, useSSL, allowPublicKeyRetrieval);
@@ -127,9 +119,6 @@ public class App {
                                 HandyManUtils.overwriteFileContent(projectNameTagPath, projectNameTagContent);
                         }
                         try (Connection connect = database.getConnexion(credentials)) {
-                                if(checkLogin){
-                                       login.ExecuteScript(connect);
-                                }
                                 entities = database.getEntities(connect, credentials, entityName);
                                 for (int i = 0; i < entities.length; i++) {
                                         entities[i].initialize(connect, credentials, database, language);
@@ -140,8 +129,9 @@ public class App {
                                 for (int i = 0; i < models.length; i++) {
                                         models[i] = language.generateModel(entities[i], projectName);
                                         controllers[i] = language.generateController(entities[i], database, credentials,
-                                                        projectName, login);
-                                        
+                                                        projectName);
+                                        // views[i] = language.generateView(entities[i], projectName);
+
                                         modelFile = language.getModel().getModelSavePath().replace("[projectNameMaj]",
                                                         HandyManUtils.majStart(projectName));
                                         controllerFile = language.getController().getControllerSavepath().replace(
@@ -193,7 +183,8 @@ public class App {
                                                 customFileContent = customFileContent.replace("[pwd]",
                                                                 credentials.getPwd());
                                                 customFileContent = customFileContent
-                                                                .replace("[modelForeignContextAttr]", foreignContext);HandyManUtils.createFile(customFile);
+                                                                .replace("[modelForeignContextAttr]", foreignContext);
+                                                HandyManUtils.createFile(customFile);
                                                 HandyManUtils.overwriteFileContent(customFile, customFileContent);
                                         }
                                         HandyManUtils.createFile(controllerFile);
