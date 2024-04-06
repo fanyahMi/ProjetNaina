@@ -1,0 +1,179 @@
+<template>
+    <div>
+        <md-card>
+        <md-card-header :data-background-color="dataBackgroundColor">
+            <h4 class="title">Listes des [classNameMaj]:</h4>
+        </md-card-header>
+        <md-card-content>
+            <md-table v-model="data" :table-header-color="tableHeaderColor">
+            <md-table-row slot="md-table-row" slot-scope="{ item }">
+
+                [Line]
+
+                <md-table-cell md-label="Actions" class="md-text-center md-layout-align-end">
+                <div class="smaller-cell">
+                    <button type="button" class="button-borderless" @click="openModal(item.[PrimaryKey])" > 
+                    <span class="bi bi-pencil-fill"></span> 
+                    </button>
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <button class="text-danger button-borderless" @click="submitDelete(item.[PrimaryKey])"> 
+                    <span class="bi bi-trash3-fill"></span> 
+                    </button>
+                </div>
+                </md-table-cell>
+            </md-table-row>
+            
+            </md-table>
+        </md-card-content>
+        </md-card>
+
+        <div v-if="totalPages > 1">
+          <ul class="pagination">
+            <li :class="{ 'disabled': currentPage === 1 }">
+              <a @click="prevPage">&laquo;</a>
+            </li>
+            <li v-for="page in totalPages" :key="page" :class="{ 'active': page === currentPage }">
+              <a @click="goToPage(page)">{{ page }}</a>
+            </li>
+            <li :class="{ 'disabled': currentPage === totalPages }">
+              <a @click="nextPage">&raquo;</a>
+            </li>
+          </ul>
+        </div>
+
+        [modalModif]
+       
+    </div>
+</template>
+
+<script>
+[imports]
+
+export default {
+  name: "table-[classNameMin]",
+  props: {
+    tableHeaderColor: {
+      type: String,
+      default: "",
+    },
+  },
+  data() {
+   
+    return {
+      [listAttribut]
+      data : [],
+      currentPage: 1,
+      itemsPerPage: 15,
+      count: null,
+    };
+  },
+  computed: {
+    totalPages() {
+      return Math.ceil(this.count / this.itemsPerPage);
+    },
+    paginatedData() {
+      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
+      return this.data.slice(startIndex, endIndex);
+    },
+  },
+  async mounted() {
+    await this.fetch();
+  },
+  methods: {
+    async fetch() {
+      try {
+        const offset = (this.currentPage - 1) * this.itemsPerPage;
+        this.data = await [classNameMaj]Service.getPagination(this.itemsPerPage, offset);
+        this.count = await [classNameMaj]Service.Count();
+      } catch (error) {
+        console.error("Erreur lors de la récupération des donnée", error);
+      }
+    },
+    async openModal(id) {
+      [contrainte]
+      this.$refs.modale.style.display = "block";
+      let values = null;
+      try{
+        values = await [classNameMaj]Service.getId(id);
+        [ListCallForeignkey]
+        [Listvalues]
+        console.log(values);
+      }catch (error) { 
+        console.error("Erreur lors de la récupération des donnée", error);
+      }
+    },
+    closeModal(event) {
+      if (event.target === this.$refs.modale) {
+        this.$refs.modale.style.display = "none";
+      }
+    },
+    async submitUpdate() {
+        [contrainte]
+        const news[classNameMaj] = {
+          [Listvalue]
+        }
+        try{
+          await [classNameMaj]Service.update(this.[PrimaryKey], news[classNameMaj]);
+          window.location.reload();
+        }catch (error) {
+          console.error("Erreur d'insertion ", error);
+        }  
+    },
+
+    async submitDelete(id) {
+      [contrainte]
+        try {
+          await [classNameMaj]Service.delete(id);
+          this.data = this.data.filter((dt) => dt.[PrimaryKey] !== id);
+        } catch (error) {
+          console.error("Erreur lors de la suppression de [classNameMaj]", error);
+        }
+      },
+      prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.fetch();
+      }
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+        this.fetch();
+      }
+    },
+    goToPage(page) {
+      this.currentPage = page;
+      this.fetch();
+    },
+  },
+};
+
+</script>
+
+<style>
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+}
+
+.pagination li {
+  margin: 0 2px;
+}
+
+.pagination a {
+  cursor: pointer;
+}
+
+.pagination .active a {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.pagination .disabled a {
+  pointer-events: none;
+  color: #6c757d;
+}
+</style>

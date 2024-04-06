@@ -1,0 +1,105 @@
+<template>
+  <div class="center-container"> <!-- Conteneur pour centrer le contenu -->
+    <form @submit.prevent="submitSave">
+      <md-card>
+        <md-card-content class="text-center">
+          <div class="md-layout">
+            <div class="md-layout-item md-size-100">
+              <md-field>
+                <label>[input1Maj]</label>
+                <md-input v-model="[input1Min]" required></md-input>
+              </md-field>
+            </div>
+            <div class="md-layout-item md-size-100">
+              <md-field>
+                <label>[input2Maj]</label>
+                <md-input type="password" v-model="[input2Min]" required></md-input>
+              </md-field>
+            </div>
+            <div class="md-layout-item md-size-100">
+              <md-button type="submit" class="md-raised md-primary">Login</md-button>
+            </div>
+            <div class="md-layout-item md-size-100">
+              <span v-if="errorMessage" class="error-message">{{ errorMessage }}</span> <!-- Affichage du message d'erreur -->
+            </div>
+          </div>
+        </md-card-content>
+      </md-card>
+    </form>
+  </div>
+</template>
+
+<script>
+import [classNameMaj]Service from '../../service/[classNameMaj]Service';
+
+export default {
+  name: "save-login",
+  props: {
+    dataBackgroundColor: {
+      type: String,
+      default: "",
+    },
+    dataLien: {
+      type: Function, 
+      default: () => {}, 
+    },
+  },
+  data() {
+    return {
+      [input1Min]: null,
+      [input2Min]: null,
+      errorMessage: '' // Variable pour stocker le message d'erreur
+    };
+  },
+  methods: {
+    async submitSave() {
+      const newsLogin = {
+        [input1Min]: this.[input1Min],
+        [input2Min]: this.[input2Min]
+      };
+      try {
+        let rep = await [classNameMaj]Service.login(newsLogin);
+        if (!rep) {
+          this.errorMessage = "Il y a une erreur"; 
+        } else {
+          this.errorMessage = '';
+          this.$router.push({ name: '\'' });
+          window.location.reload();
+        }
+        console.log(rep);
+        //
+      } catch (error) {
+        console.error("Erreur d'insertion ", error);
+      }
+    },
+  },
+};
+</script>
+
+<style scoped>
+/* Centrer le contenu dans la carte */
+.md-card-content.text-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Centrer le contenu dans le layout */
+.md-layout {
+  max-width: 400px; /* Optionnel : définir une largeur maximale pour le formulaire */
+  margin: 0 auto; /* Centrer horizontalement */
+}
+
+/* Centrer le conteneur dans la page */
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh; /* Hauteur de la fenêtre visible */
+}
+
+/* Style du message d'erreur */
+.error-message {
+  color: red;
+}
+</style>

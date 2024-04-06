@@ -1,0 +1,7 @@
+ <!-- Condition pour afficher le lien de connexion ou de déconnexion -->
+      <sidebar-link v-if="!isConnected" to="/[classNameMin]">
+        <p>Login</p>
+      </sidebar-link>
+      <sidebar-link v-if="isConnected" to="/logout">
+        <p>Logout</p>
+      </sidebar-link>

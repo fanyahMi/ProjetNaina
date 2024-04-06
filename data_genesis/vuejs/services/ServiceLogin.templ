@@ -1,0 +1,29 @@
+
+
+async logout(){
+      sessionStorage.setItem("connect", false);
+      sessionStorage.removeItem("data");
+    },
+
+async login(data){
+      try {
+        const response = await fetch(`${host}loginVue`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+        const rep = await response.json();
+        console.log(rep);
+        if(rep.data !== false){
+          sessionStorage.setItem("connect", true);
+          sessionStorage.setItem("data", rep.data);
+          return true;
+        }else{
+          return rep.data;
+        }
+      } catch (error) {
+        console.log("Erreur d insertion : " , error);
+      }
+    },
